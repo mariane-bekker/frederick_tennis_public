@@ -11,14 +11,14 @@ of tennis.
 
 Scoring in tennis is a little more complicated than other games, as the number
 of points scored don't exactly match the score as its called in the game. A
-player's score goes from 0 to 15 to 30 to 40 as they score each point. If the
+player's score goes from 'love' to 15 to 30 to 40 as they score each point. If the
 score is tied, that score is called with "all" afterwards; e.g. "15 all" or
 "Love all". The following is a summary of the way to score tennis games, but
 the definitive guide can be found at the [United States Tennis
 Association](https://www.usta.com/en/home/improve/tips-and-instruction/national/tennis-101--scoring.html)
 website.
 
-The same player always serves the ball in tennis, and the server's score comes
+The same player always serves the ball in a game of tennis, and the server's score comes
 first when calling the score out. The word "love" is used to mean zero points,
 so a player's score starts at "love", then if they get a point their score is
 then 15, then after another point their score would be 30, and another one 40.
@@ -30,10 +30,10 @@ same number of points won.
 
 If the two players are tied and one player gets a point, they are said to have
 "advantage" because their next point would end the game. If the server is the
-one with advantage, this is called "Advantage in"; otherwise it is called
+one with advantage, the score is called "Advantage in"; otherwise it is called
 "Advantage out". If at this point the other non-advantaged player scores a
 point, the score will again be a deuce.
-
+If the advantaged player scores a point, ending the game, the score is called 'Game So-and-so' where 'So-and-so' is the name of the player who won the game
 ### Example
 
 Let's imagine a game between Venus and Serena Williams.
@@ -113,6 +113,6 @@ response payload:
   "receiver": "Serena",
   "server_score": 3,
   "receiver_score": 2,
-  "called_score": "40-30"
+  "called_score": "40 30"
 }
 ```
