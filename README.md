@@ -9,56 +9,70 @@ of tennis.
 
 ## Scoring in tennis
 
-Scoring in tennis is a little more complicated than other games. The following
-is a summary of the way to score tennis games, but the definitive guide can be
-found at the [United States Tennis
+Scoring in tennis is a little more complicated than other games, as the number
+of points scored don't exactly match the score as its called in the game. A
+player's score goes from 'love' to 15 to 30 to 40 as they score each point. If the
+score is tied, that score is called with "all" afterwards; e.g. "15 all" or
+"Love all". The following is a summary of the way to score tennis games, but
+the definitive guide can be found at the [United States Tennis
 Association](https://www.usta.com/en/home/improve/tips-and-instruction/national/tennis-101--scoring.html)
 website.
 
-Two players competing against one another in tennis is referred to as a
-"match", where a match consists of a series of tennis _sets_, each of which is
-comprised of a series of games. A tennis game consists of a series of _points_
-played with the same player serving the ball each time. You have been given the
-task of building a minimally viable product to score tennis, which will just be
-an API endpoint to score a single game. 
+The same player always serves the ball in a game of tennis, and the server's score comes
+first when calling the score out. The word "love" is used to mean zero points,
+so a player's score starts at "love", then if they get a point their score is
+then 15, then after another point their score would be 30, and another one 40.
+To win a game of tennis, a player must score four points _and_ score 2 more
+points than their opponent. If the players both score 3 times and both their
+scores are 40, this is called a "deuce". A deuce specifically describes the
+situation where both players have scored at least 3 points and now have the
+same number of points won.
 
-A game begins with both players at zero points. When the game is in this state,
-the score is called out as "love all". "Love" is zero points, and the score is
-followed by "all" when the score for both players is the same. The exception is
-when both players in a game have scored 3 points, making the score 40-40 which
-is called "deuce". From that point on, any tied score will be called "deuce"
-regardless of the amount of points scored. Once a player reaches 40 (3 points
-scored), they must score two more points than their opponent to win the game.
+If the two players are tied and one player gets a point, they are said to have
+"advantage" because their next point would end the game. If the server is the
+one with advantage, the score is called "Advantage in"; otherwise it is called
+"Advantage out". If at this point the other non-advantaged player scores a
+point, the score will again be a deuce. If the advantaged player scores a
+point, ending the game, the score is called 'Game So-and-so' where 'So-and-so'
+is the name of the player who won the game
 
-The following are all scores where the player serving the ball has won:
+Here are some examples of receiver/server scores and the corresponding called
+scores, using the same game as an example:
 
-  * 40-15
-  * 40-0
-  * 40-40 then tiebreak 2-0
+| Server Points | Receiver Points | Called Score    |
+| ------------- | --------------- | --------------- |
+| 0             | 0               | Love all        |
+| 0             | 1               | Love 15         |
+| 2             | 2               | 30 all          |
+| 3             | 0               | 40 love         |
+| 4             | 1               | Game Venus      |
+| 12            | 12              | Deuce           |
+| 4             | 5               | Advantage out   |
+| 5             | 7               | Game Serena     |
 
-Once a deuce is reached, the score is tied and the tie must be broken by
-continuing to play. If, during this time, a player scores, that player is
-said to have the "advantage". If the player with the advantage is the
-player who serves during the game, the score is then called "Advantage in";
-when it's the opposing player, this is called "Advantage out". Here are some
-post-deuce scores and their calls:
+### Example
 
-  * 1-0: "Advantage in"
-  * 2-3: "Advantage out"
-  * 1-1: "Deuce"
-  * 5-4: "Advantage in"
+Let's imagine a game between Venus and Serena Williams.
 
-If the player with the advantage wins another point, they win because their
-score is now 2 points higher than their opponent. If the player without the
-advantage wins a point, the score is again "deuce" since it's tied. A deuce is
-called a deuce regardless of if it's 3-3 or 389-389; any tie is a deuce.
+  1. At the start of the game, neither player has scored any points, so the
+     score is 0-0 or "Love all".
+  2. Venus scores a point and now the score is "15 love".
+  3. Serena scores a point and now the score is "15 all".
+  4. Serena scores another point and now the score is "15 30".
+  5. Serena scores again, making the score "15 40". At this point, if Serena
+     scores one more point she will win, because she will have scored 4 or more
+     points and will be at least 2 points ahead.
+  6. Venus scores, making the score "30 40". Serena can still win with her next
+     point.
+  7. Venus scores again, tying the score at 40-40, called "Deuce".
+  8. Serena scores a point, making the score "Advantage Serena".
+  9. Serena's next point wins the game, as she will have scored at least 4
+     points total, and will have scored 2 more than Venus.
 
 ## The API
 
-Build a simple API for keeping track of a tennis set. A partially-built
-Ruby on Rails app has been provided for you to add to. Your API must have
-endpoints for matches and games. Sets are called TennisSets to avoid
-colliding with the name Set in Ruby.
+Build a simple API for keeping track of a tennis game. A partially-built
+Ruby on Rails app has been provided for you to add to.
 
 ### `/games` endpoint
 
@@ -67,20 +81,51 @@ colliding with the name Set in Ruby.
 Games accept a JSON payload like this:
 ```javascript
 {
-  "server": "Mick Jagger",
-  "receiver": "David Bowie"
+  "server": "Venus",
+  "receiver": "Serena"
 }
 ```
 
-The above payload would start a game between Mick Jagger and David Bowie with
-Mick Jagger serving the ball each point.
+The above payload would start a game between Venus and Serena Williams with
+Venus serving the ball each point. The API should respond with the game
+object. Here is an example response to the request above:
 
-`GET /games` -- Gets all the games.
+```javascript
+{
+  "server": "Venus",
+  "receiver": "Serena",
+  "server_score": 0,
+  "receiver_score": 0,
+  "called_score": "Love all",
+}
+```
 
-`GET /games/:id` -- Gets a specific game's score.
+`GET /games` -- Gets all the games as a JSON array of game objects like the one
+above.
+
+`GET /games/:id` -- Gets a specific game's score. Response should look like the
+JSON above.
 
 `POST /games/:id/score` -- Accepts a player's name and adds a point to their
 score. The returned JSON payload should describe the score so far (see below).
+
+Example request payload for the game above:
+
+```javascript
+Venus
+```
+
+And example response from that request:
+
+```javascript
+{
+  "server": "Venus",
+  "receiver": "Serena",
+  "server_score": 1,
+  "receiver_score": 0,
+  "called_score": "15 love",
+}
+```
 
 ### Game payload
 
@@ -94,27 +139,15 @@ Games contain the following attributes:
   * `called_score` - This is a string value representing what the tennis judge
     should call out for this score. (Examples below.)
 
-Here are some examples of receiver/server scores and the corresponding called
-scores:
-
-  * 0-0 - "Love all"
-  * 0-1 - "Love 15"
-  * 2-2 - "30 all"
-  * 3-0 - "40 love"
-  * 4-1 - "Game Mick Jagger"
-  * 12-12 - "Deuce"
-  * 4-5 - "Advantage out"
-  * 5-7 - "Game David Bowie"
-
 Note that the server's score always comes first. Here is a full example of a
 response payload:
 
 ```javascript
 {
-  "server": "Mick Jagger",
-  "receiver": "David Bowie",
+  "server": "Venus",
+  "receiver": "Serena",
   "server_score": 3,
   "receiver_score": 2,
-  "called_score": "40-30"
+  "called_score": "40 30"
 }
 ```
