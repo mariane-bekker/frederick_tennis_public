@@ -32,8 +32,24 @@ If the two players are tied and one player gets a point, they are said to have
 "advantage" because their next point would end the game. If the server is the
 one with advantage, the score is called "Advantage in"; otherwise it is called
 "Advantage out". If at this point the other non-advantaged player scores a
-point, the score will again be a deuce.
-If the advantaged player scores a point, ending the game, the score is called 'Game So-and-so' where 'So-and-so' is the name of the player who won the game
+point, the score will again be a deuce. If the advantaged player scores a
+point, ending the game, the score is called 'Game So-and-so' where 'So-and-so'
+is the name of the player who won the game
+
+Here are some examples of receiver/server scores and the corresponding called
+scores, using the same game as an example:
+
+| Server Points | Receiver Points | Called Score    |
+| ------------- | --------------- | --------------- |
+| 0             | 0               | Love all        |
+| 0             | 1               | Love 15         |
+| 2             | 2               | 30 all          |
+| 3             | 0               | 40 love         |
+| 4             | 1               | Game Venus      |
+| 12            | 12              | Deuce           |
+| 4             | 5               | Advantage out   |
+| 5             | 7               | Game Serena     |
+
 ### Example
 
 Let's imagine a game between Venus and Serena Williams.
@@ -71,14 +87,45 @@ Games accept a JSON payload like this:
 ```
 
 The above payload would start a game between Venus and Serena Williams with
-Venus serving the ball each point.
+Venus serving the ball each point. The API should respond with the game
+object. Here is an example response to the request above:
 
-`GET /games` -- Gets all the games.
+```javascript
+{
+  "server": "Venus",
+  "receiver": "Serena",
+  "server_score": 0,
+  "receiver_score": 0,
+  "called_score": "Love all",
+}
+```
 
-`GET /games/:id` -- Gets a specific game's score.
+`GET /games` -- Gets all the games as a JSON array of game objects like the one
+above.
+
+`GET /games/:id` -- Gets a specific game's score. Response should look like the
+JSON above.
 
 `POST /games/:id/score` -- Accepts a player's name and adds a point to their
 score. The returned JSON payload should describe the score so far (see below).
+
+Example request payload for the game above:
+
+```javascript
+Venus
+```
+
+And example response from that request:
+
+```javascript
+{
+  "server": "Venus",
+  "receiver": "Serena",
+  "server_score": 1,
+  "receiver_score": 0,
+  "called_score": "15 love",
+}
+```
 
 ### Game payload
 
@@ -91,18 +138,6 @@ Games contain the following attributes:
   * `receiver_score` - See `server_score`
   * `called_score` - This is a string value representing what the tennis judge
     should call out for this score. (Examples below.)
-
-Here are some examples of receiver/server scores and the corresponding called
-scores:
-
-  * 0-0 - "Love all"
-  * 0-1 - "Love 15"
-  * 2-2 - "30 all"
-  * 3-0 - "40 love"
-  * 4-1 - "Game Venus"
-  * 12-12 - "Deuce"
-  * 4-5 - "Advantage out"
-  * 5-7 - "Game Serena"
 
 Note that the server's score always comes first. Here is a full example of a
 response payload:
