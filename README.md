@@ -109,10 +109,11 @@ JSON above.
 `POST /games/:id/score` -- Accepts a player's name and adds a point to their
 score. The returned JSON payload should describe the score so far (see below).
 
-Example request payload for the game above:
+Example request payload for the game above, indicating that Venus Williams had
+just scored a point:
 
 ```javascript
-Venus
+{"score":"Venus"}
 ```
 
 And example response from that request:
