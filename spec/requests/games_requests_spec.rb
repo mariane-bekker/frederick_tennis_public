@@ -7,6 +7,25 @@ RSpec.describe GamesController, type: :request do
 
   let(:game) { Game.create!(server_name: server_name, receiver_name: receiver_name) }
 
+  context 'POST /games' do
+    before { post '/games', params: { server: server_name, receiver: receiver_name }.to_json, headers: request_headers }
+
+    it 'creates a new game' do
+      expect(response).to be_successful
+    end
+
+    it 'returns the expected response' do
+      parsed_body = JSON.parse(response.body)
+      expect(parsed_body).to eq(
+        'server' => 'Venus',
+        'receiver' => 'Serena',
+        'server_score' => 0,
+        'receiver_score' => 0,
+        'called_score' => 'Love all'
+      )
+    end
+  end
+
   context 'POST /games/:id/score' do
     [
       [0, 0, 'Love all'],
@@ -22,7 +41,7 @@ RSpec.describe GamesController, type: :request do
       [4, 3, 'Advantage in'],
       [3, 1, '40 15'],
       [5, 3, 'Game Venus'],
-      [5, 7, 'Game Serena'],
+      [5, 7, 'Game Serena']
     ].each do |test_case|
       server_score, receiver_score, called_score = test_case
 
