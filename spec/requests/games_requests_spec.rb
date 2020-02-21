@@ -20,7 +20,7 @@ RSpec.describe GamesController, type: :request do
       [19, 20, 'Advantage out'],
       [5, 4, 'Advantage in'],
       [4, 3, 'Advantage in'],
-      [3, 1, '40 10'],
+      [3, 1, '40 15'],
       [5, 3, 'Game Venus'],
       [5, 7, 'Game Serena'],
     ].each do |test_case|
@@ -28,19 +28,18 @@ RSpec.describe GamesController, type: :request do
 
       it "correctly scores #{server_score}-#{receiver_score} as #{called_score}" do
         server_score.times do
-          post "/games/#{game.id}/score", params: server_name, headers: request_headers
-          expect(response).to be_success
+          post "/games/#{game.id}/score", params: { score: server_name }.to_json, headers: request_headers
+          expect(response).to be_successful
         end
 
         receiver_score.times do
-          post "/games/#{game.id}/score", params: receiver_name, headers: request_headers
-          expect(response).to be_success
+          post "/games/#{game.id}/score", params: { score: receiver_name }.to_json, headers: request_headers
+          expect(response).to be_successful
         end
 
         get "/games/#{game.id}"
 
         parsed_response = JSON.parse(response.body)
-
         expect(parsed_response['called_score']).to eq called_score
       end
     end
