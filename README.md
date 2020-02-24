@@ -4,8 +4,12 @@
  | _>| '_>/ ._>/ . |  | |/ ._>| ' || ' || |<_-<
  |_| |_|  \___.\___|  |_|\___.|_|_||_|_||_|/__/
 ```
+## Task:
 Use the included controller and model to create a simple API for scoring games
 of tennis. 
+
+**NOTE:** If you run the specs, you'll notice an error - You will have to fix this 
+in order for the API to work correctly to spec.
 
 ## Scoring in tennis
 
