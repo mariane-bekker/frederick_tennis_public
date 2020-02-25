@@ -22,15 +22,16 @@ the definitive guide can be found at the [United States Tennis
 Association](https://www.usta.com/en/home/improve/tips-and-instruction/national/tennis-101--scoring.html)
 website.
 
-The same player always serves the ball in a game of tennis, and the server's score comes
-first when calling the score out. The word "love" is used to mean zero points,
+<b>The same player always serves the ball in a game of tennis, and the server's score comes
+first when calling the score out.</b> The word "love" is used to mean zero points,
 so a player's score starts at "love", then if they get a point their score is
 then 15, then after another point their score would be 30, and another one 40.
 To win a game of tennis, a player must score four points _and_ score 2 more
 points than their opponent. If the players both score 3 times and both their
 scores are 40, this is called a "deuce". A deuce specifically describes the
 situation where both players have scored at least 3 points and now have the
-same number of points won.
+same number of points won. 
+<i> * Note that this <b>definition of a Deuce</b> is specific to 'Frederick' tennis.</i>
 
 If the two players are tied and one player gets a point, they are said to have
 "advantage" because their next point would end the game. If the server is the
@@ -101,11 +102,9 @@ object. Here is an example response to the request above:
   "server_score": 0,
   "receiver_score": 0,
   "called_score": "Love all",
+  "game_id": "#{game_id}"
 }
 ```
-
-`GET /games` -- Gets all the games as a JSON array of game objects like the one
-above.
 
 `GET /games/:id` -- Gets a specific game's score. Response should look like the
 JSON above.
@@ -129,6 +128,7 @@ And example response from that request:
   "server_score": 1,
   "receiver_score": 0,
   "called_score": "15 love",
+  "game_id": "#{game_id}"
 }
 ```
 
@@ -143,6 +143,7 @@ Games contain the following attributes:
   * `receiver_score` - See `server_score`
   * `called_score` - This is a string value representing what the tennis judge
     should call out for this score. (Examples below.)
+  * `id` - All games have a unique id.
 
 Note that the server's score always comes first. Here is a full example of a
 response payload:
